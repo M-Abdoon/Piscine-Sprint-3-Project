@@ -1,13 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Codewars leaderboard</title>
-</head>
-<body>
-  
+<header role="banner">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Codewars leaderboard</title>
+</header>
+
+<body role="main" bgcolor="#222">
+	<center>
+		<div style="width:900px; height:900px; background-color:#111; color: white;">
+			<h1>Codewars Leadserboard</h1>
+			<form>
+				<label for="usersInput">
+					Enter Usernames
+					<br>
+					<textarea name="usersInput" id="usersInput" placeholder="Enter Usernames.." cols="50">M-Abdoon</textarea>
+				</label>
+				<br>
+				<label for="controlers">
+					<input type="submit" name="sbmitUsers" id="submitUsers"></input>
+					<select id="languagesDropDown" disabled>
+						<option value="0">-- SELECT --</option>
+					</select>
+				</label>
+				<br>
+				<p id="loadingText"></p>
+				<p id="msgToUser" style="background-color: rgb(244, 133, 133);color: black;"></p>
+				<table id="usersTable" cellspacing="0" cellpadding="10" width="900" style="border-collapse: collapse;">
+					<thead>
+						<tr style="background-color:#ccc; color:black;border-bottom: 1px solid #555;">
+							<th style="text-align:left;"">Username</th>
+					<th style=" text-align:left;"">Clan</th>
+							<th style="text-align:left;"">Score</th>
+				</tr>
+			</thead>
+			<tbody id=" usersTableBody">
+								</tbody>
+				</table>
+
+			</form>
+		</div>
+	</center>
 </body>
 
 <script src="index.mjs" type="module"></script>
+
 </html>
