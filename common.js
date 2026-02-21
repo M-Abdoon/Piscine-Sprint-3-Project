@@ -1,4 +1,8 @@
-import { getUserInfo } from "./logic.js";
+import { getUserInfo, fetchAllUsersData } from "./logic.js";
 
-const submitUsersBtn = document.getElementById("submitUsers").value;
-console.log(getUserInfo(submitUsersBtn));
+const usersInput = document.getElementById("submitUsers");
+usersInput.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const submitUsersBtn = document.getElementById("usersInput").value;
+  console.log(await fetchAllUsersData(submitUsersBtn));
+});

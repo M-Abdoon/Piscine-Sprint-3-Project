@@ -28,5 +28,3 @@ export async function fetchAllUsersData(listOfUsernames) {
   }
   return allUsersFetchedData;
 }
-
-console.log(await fetchAllUsersData("M-Abdoon,CodeYourFuture"));
