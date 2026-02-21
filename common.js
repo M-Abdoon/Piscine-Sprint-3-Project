@@ -11,10 +11,20 @@ async function setup() {
   submitUsersBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     loadingTextEl.innerHTML = "Loading ...";
-    const allUsersInArray = usersInput.value;
+    msgToUser.innerHTML = "";
+
+    const usernames = usersInput.value;
+    const allUsersFetchedData = await fetchAllUsersData(usernames);
 
     renderTable();
-    allUsersFetchedData = await fetchAllUsersData(allUsersInArray);
+    allUsersFetchedData.forEach((result) => {
+      if (result.notFound) {
+        msgToUser.innerHTML += `User not found: ${result.username}<br>`;
+      } else if (result.error) {
+        msgToUser.innerHTML += `Error fetching ${result.username}: ${result.message}<br>`;
+      }
+    });
+
     fillLanguagesDropDown(allUsersFetchedData);
     displayUsers(allUsersFetchedData, "overall");
     loadingTextEl.innerHTML = "";
@@ -61,33 +71,35 @@ function renderTable() {
 
 function displayUsers(allUsersInArray, selectedLanguage) {
   const usersTableBody = document.getElementById("usersTableBody");
-  const msgToUser = document.getElementById("msgToUser");
   let contentArray = [];
-
+  console.log(allUsersInArray);
   allUsersInArray.forEach((userData) => {
-    if (Object.values(userData)[0] != null) {
+    if (!userData.data) return;
+
+    const currentUserData = userData.data;
+    if (Object.values(currentUserData)[0] != null) {
       const langScore =
         selectedLanguage === "overall"
-          ? (userData.ranks.overall?.score ?? 0)
-          : (userData.ranks.languages[selectedLanguage]?.score ?? 0);
+          ? (currentUserData.ranks.overall?.score ?? 0)
+          : (currentUserData.ranks.languages[selectedLanguage]?.score ?? 0);
 
-      const userClan = userData.clan ?? "";
+      const userClan = currentUserData.clan ?? "";
 
       if (langScore !== 0) {
         contentArray.push({
-          username: userData.username,
+          username: currentUserData.username,
           clan: userClan,
           score: langScore,
         });
       }
     } else {
-      msgToUser.innerHTML += `Failed to fetch user: ${Object.keys(userData)[0]}`;
+      msgToUser.innerHTML += `Failed to fetch user: ${Object.keys(currentUserData)[0]}`;
       msgToUser.innerHTML += `<br>`;
     }
   });
   contentArray.sort((a, b) => b.score - a.score);
 
-  contentArray.forEach((userData, i) => {
+  contentArray.forEach((currentUserData, i) => {
     let bgColor = "#333";
     let color = "white";
     if (i == 0) {
@@ -97,9 +109,9 @@ function displayUsers(allUsersInArray, selectedLanguage) {
 
     usersTableBody.innerHTML += `
 		<tr style="background-color:${bgColor}; color:${color}; border-bottom: 1px solid #555;">
-			<td>${userData.username}</td>
-			<td>${userData.clan}</td>
-			<td>${userData.score}</td>
+			<td>${currentUserData.username}</td>
+			<td>${currentUserData.clan}</td>
+			<td>${currentUserData.score}</td>
 			</tr>`;
   });
 }

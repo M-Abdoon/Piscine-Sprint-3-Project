@@ -7,31 +7,21 @@ export async function getUserInfo(username) {
       return { notFound: true, username };
     }
 
-    return await url.json();
+    return { data: await url.json() };
   } catch (error) {
-    return { error: true, message: err.message };
+    return { error: true, message: error.message };
   }
 }
 
 export async function fetchAllUsersData(listOfUsernames) {
-  const allUsersInArray = listOfUsernames.split(",");
-  let allUsersFetchedData = [];
+  let allUsersInArray = listOfUsernames.split(",");
 
-  for (const username of allUsersInArray) {
-    const userData = await getUserInfo(username);
+  allUsersInArray = allUsersInArray.map((u) => u.trim());
+  allUsersInArray = allUsersInArray.filter((u) => u.length > 0);
 
-    if (userData.notFound) {
-      allUsersFetchedData.push({ [username]: null });
-      msgToUser.innerHTML += `User not found: ${username}<br>`;
-      continue;
-    }
+  const allUsersFetchedData = await Promise.all(
+    allUsersInArray.map((username) => getUserInfo(username)),
+  );
 
-    if (userData.error) {
-      msgToUser.innerHTML += `Error when fetching ${username}: ${result.message}<br>`;
-      continue;
-    }
-
-    allUsersFetchedData.push(userData);
-  }
   return allUsersFetchedData;
 }
