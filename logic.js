@@ -12,4 +12,21 @@ export async function getUserInfo(username) {
   }
 }
 
-console.log(await getUserInfo("M-Abdoon"));
+export async function fetchAllUsersData(listOfUsernames) {
+  const allUsersInArray = listOfUsernames.split(",");
+  let allUsersFetchedData = [];
+
+  for (const username of allUsersInArray) {
+    const userData = await getUserInfo(username);
+
+    if (!userData) {
+      allUsersFetchedData.push({ [username]: null });
+      continue;
+    }
+
+    allUsersFetchedData.push(userData);
+  }
+  return allUsersFetchedData;
+}
+
+console.log(await fetchAllUsersData("M-Abdoon,CodeYourFuture"));
