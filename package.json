@@ -1,9 +1,20 @@
 {
+  "name": "piscine-sprint-3-project",
+  "version": "1.0.0",
+  "description": "Codewars provides [an API](https://dev.codewars.com/) that can be used to look up an individual user's rank and score.",
+  "main": "common.js",
   "scripts": {
-    "test": "node --test"
+    "test": "npm test"
   },
-  "devDependencies": {
-    "nock": "^14.0.0-beta.15"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/M-Abdoon/Piscine-Sprint-3-Project.git"
   },
-  "type": "module"
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/M-Abdoon/Piscine-Sprint-3-Project/issues"
+  },
+  "homepage": "https://github.com/M-Abdoon/Piscine-Sprint-3-Project#readme"
 }
