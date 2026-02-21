@@ -5,7 +5,6 @@ async function setup() {
   const usersInput = document.getElementById("usersInput");
   const languagesDropDownEl = document.getElementById("languagesDropDown");
   const loadingTextEl = document.getElementById("loadingText");
-  //const msgToUser = document.getElementById("msgToUser");
 
   let allUsersFetchedData = [];
 
@@ -21,16 +20,15 @@ async function setup() {
     loadingTextEl.innerHTML = "";
   });
 
-  languagesDropDownEl.addEventListener("change", async () => {
+  languagesDropDownEl.addEventListener("change", () => {
     loadingTextEl.innerHTML = "Loading ...";
-    const allUsersInArray = usersInput.value;
     renderTable();
     displayUsers(allUsersFetchedData, languagesDropDownEl.value);
     loadingTextEl.innerHTML = "";
   });
 }
 
-async function fillLanguagesDropDown(allUsersDataInArray) {
+function fillLanguagesDropDown(allUsersDataInArray) {
   const languagesDropDownEl = document.getElementById("languagesDropDown");
   let languagesOfAllUsers = [];
 
@@ -55,13 +53,15 @@ async function fillLanguagesDropDown(allUsersDataInArray) {
 
 function renderTable() {
   const usersTableBodyEl = document.getElementById("usersTableBody");
+  const msgToUser = document.getElementById("msgToUser");
 
   usersTableBodyEl.innerHTML = "";
   msgToUser.innerHTML = "";
 }
 
-async function displayUsers(allUsersInArray, selectedLanguage) {
+function displayUsers(allUsersInArray, selectedLanguage) {
   const usersTableBody = document.getElementById("usersTableBody");
+  const msgToUser = document.getElementById("msgToUser");
   let contentArray = [];
 
   allUsersInArray.forEach((userData) => {
@@ -71,7 +71,7 @@ async function displayUsers(allUsersInArray, selectedLanguage) {
           ? (userData.ranks.overall?.score ?? 0)
           : (userData.ranks.languages[selectedLanguage]?.score ?? 0);
 
-      const userClan = userData.clan == null ? "" : userData.clan;
+      const userClan = userData.clan ?? "";
 
       if (langScore !== 0) {
         contentArray.push({
@@ -81,7 +81,8 @@ async function displayUsers(allUsersInArray, selectedLanguage) {
         });
       }
     } else {
-      msgToUser.innerHTML += `Failed to fetch user: ${Object.keys(userData)[0]} <br>`;
+      msgToUser.innerHTML += `Failed to fetch user: ${Object.keys(userData)[0]}`;
+      msgToUser.innerHTML += `<br>`;
     }
   });
   contentArray.sort((a, b) => b.score - a.score);
