@@ -5,6 +5,7 @@ async function setup() {
   const usersInput = document.getElementById("usersInput");
   const languagesDropDownEl = document.getElementById("languagesDropDown");
   const loadingTextEl = document.getElementById("loadingText");
+  //const msgToUser = document.getElementById("msgToUser");
 
   let allUsersFetchedData = [];
 
@@ -80,8 +81,7 @@ async function displayUsers(allUsersInArray, selectedLanguage) {
         });
       }
     } else {
-      msgToUser.textContent += `Failed to fetch user: ${Object.keys(userData)[0]}`;
-      msgToUser.innerHTML += `<br>`;
+      msgToUser.innerHTML += `Failed to fetch user: ${Object.keys(userData)[0]} <br>`;
     }
   });
   contentArray.sort((a, b) => b.score - a.score);
