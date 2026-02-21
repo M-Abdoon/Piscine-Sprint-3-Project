@@ -14,7 +14,7 @@ async function setup() {
     msgToUser.innerHTML = "";
 
     const usernames = usersInput.value;
-    const allUsersFetchedData = await fetchAllUsersData(usernames);
+    allUsersFetchedData = await fetchAllUsersData(usernames);
 
     renderTable();
     allUsersFetchedData.forEach((result) => {
@@ -42,10 +42,11 @@ function fillLanguagesDropDown(allUsersDataInArray) {
   const languagesDropDownEl = document.getElementById("languagesDropDown");
   let languagesOfAllUsers = [];
 
-  //allUsersDataInArray = allUsersDataInArray.filter(user => Object.values(user)[0] != null);
-
   allUsersDataInArray.forEach((userData) => {
-    const langs = Object.keys(userData.ranks?.languages || {});
+    if (!userData.data) return;
+
+    const currentUserData = userData.data;
+    const langs = Object.keys(currentUserData.ranks?.languages || {});
 
     langs.forEach((lang) => {
       languagesOfAllUsers.push(lang);
