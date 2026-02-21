@@ -9,7 +9,7 @@ export async function getUserInfo(username) {
 
     return { data: await url.json() };
   } catch (error) {
-    return { error: true, message: error.message };
+    return { error: true, message: error.message, username };
   }
 }
 

@@ -5,6 +5,7 @@ async function setup() {
   const usersInput = document.getElementById("usersInput");
   const languagesDropDownEl = document.getElementById("languagesDropDown");
   const loadingTextEl = document.getElementById("loadingText");
+  const msgToUser = document.getElementById("msgToUser");
 
   let allUsersFetchedData = [];
 
@@ -56,15 +57,16 @@ function fillLanguagesDropDown(allUsersDataInArray) {
   languagesOfAllUsers = new Set(languagesOfAllUsers);
 
   languagesDropDownEl.disabled = false;
-  languagesDropDownEl.innerHTML = `<option value="overall">Overall</option>`;
+
+  let option = `<option value="overall">Overall</option>`;
   languagesOfAllUsers.forEach((lang) => {
-    languagesDropDownEl.innerHTML += `<option value="${lang}">${lang}</option>`;
+    option += `<option value="${lang}">${lang}</option>`;
   });
+  languagesDropDownEl.innerHTML = option;
 }
 
 function renderTable() {
   const usersTableBodyEl = document.getElementById("usersTableBody");
-  const msgToUser = document.getElementById("msgToUser");
 
   usersTableBodyEl.innerHTML = "";
   msgToUser.innerHTML = "";
@@ -73,7 +75,7 @@ function renderTable() {
 function displayUsers(allUsersInArray, selectedLanguage) {
   const usersTableBody = document.getElementById("usersTableBody");
   let contentArray = [];
-  console.log(allUsersInArray);
+
   allUsersInArray.forEach((userData) => {
     if (!userData.data) return;
 
@@ -81,21 +83,18 @@ function displayUsers(allUsersInArray, selectedLanguage) {
     if (Object.values(currentUserData)[0] != null) {
       const langScore =
         selectedLanguage === "overall"
-          ? (currentUserData.ranks.overall?.score ?? 0)
-          : (currentUserData.ranks.languages[selectedLanguage]?.score ?? 0);
+          ? currentUserData.ranks.overall
+          : currentUserData.ranks.languages[selectedLanguage];
 
       const userClan = currentUserData.clan ?? "";
 
-      if (langScore !== 0) {
-        contentArray.push({
-          username: currentUserData.username,
-          clan: userClan,
-          score: langScore,
-        });
-      }
-    } else {
-      msgToUser.innerHTML += `Failed to fetch user: ${Object.keys(currentUserData)[0]}`;
-      msgToUser.innerHTML += `<br>`;
+      if (!langScore) return;
+
+      contentArray.push({
+        username: currentUserData.username,
+        clan: userClan,
+        score: langScore.score,
+      });
     }
   });
   contentArray.sort((a, b) => b.score - a.score);
