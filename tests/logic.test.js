@@ -26,18 +26,18 @@ nock(API_BASE)
 
 nock(API_BASE).persist().get("/api/v1/users/userDoesntExist").reply(404);
 
-test("getUserInfo - valid user", async () => {
+test("getUserInfo - valid user is fetched correctly", async () => {
   const result = await getUserInfo("M-Abdoon");
   assert.strictEqual(result.data.username, "M-Abdoon");
 });
 
-test("getUserInfo - user not found", async () => {
+test("getUserInfo - fetching a user that does not exist should show an error message", async () => {
   const result = await getUserInfo("userDoesntExist");
   assert.strictEqual(result.notFound, true);
   assert.strictEqual(result.username, "userDoesntExist");
 });
 
-test("getUserInfo - network error", async () => {
+test("getUserInfo - when the response is 404, an error message should be shown", async () => {
   const result = await getUserInfo("networkError");
   assert.strictEqual(result.error, true);
   assert.strictEqual(result.message, "Network error");
