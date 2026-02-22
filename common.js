@@ -11,6 +11,10 @@ async function setup() {
 
   submitUsersBtn.addEventListener("click", async (e) => {
     e.preventDefault();
+    if (usersInput.value.trim() === "") {
+      msgToUser.innerHTML = "Please enter at least one username.";
+      return;
+    }
     loadingTextEl.innerHTML = "Loading ...";
     msgToUser.innerHTML = "";
 
