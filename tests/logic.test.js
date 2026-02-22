@@ -5,39 +5,26 @@ import test from "node:test";
 
 const API_BASE = "https://www.codewars.com";
 
-nock.disableNetConnect();
-
 nock(API_BASE)
+  .persist()
   .get("/api/v1/users/M-Abdoon")
   .reply(200, {
     username: "M-Abdoon",
     ranks: {
-      overall: { rank: -4, name: "4 kyu", color: "blue", score: 500 },
+      overall: { rank: -6, name: "7 kyu", color: "red", score: 600 },
       languages: {
-        javascript: { rank: -4, name: "4 kyu", color: "blue", score: 300 },
+        python: { rank: -3, name: "3 kyu", color: "red", score: 400 },
       },
     },
-    clan: "ClanA",
-  });
-
-nock(API_BASE).get("/api/v1/users/userDoesntExist").reply(404);
-
-nock(API_BASE)
-  .get("/api/v1/users/user2")
-  .reply(200, {
-    username: "user2",
-    ranks: {
-      overall: { rank: -3, name: "3 kyu", color: "green", score: 600 },
-      languages: {
-        python: { rank: -3, name: "3 kyu", color: "green", score: 400 },
-      },
-    },
-    clan: "ClanB",
+    clan: "CodeYourFuture",
   });
 
 nock(API_BASE)
+  .persist()
   .get("/api/v1/users/networkError")
   .replyWithError("Network error");
+
+nock(API_BASE).persist().get("/api/v1/users/userDoesntExist").reply(404);
 
 test("getUserInfo - valid user", async () => {
   const result = await getUserInfo("M-Abdoon");
@@ -55,4 +42,22 @@ test("getUserInfo - network error", async () => {
   assert.strictEqual(result.error, true);
   assert.strictEqual(result.message, "Network error");
   assert.strictEqual(result.username, "networkError");
+});
+
+test("fetchAllUsersData - check function fetches multi users with correct information", async () => {
+  const result = await fetchAllUsersData(
+    "networkError, M-Abdoon, userDoesntExist",
+  );
+
+  assert.strictEqual(result.length, 3);
+  assert.strictEqual(result[0].error, true);
+  assert.strictEqual(result[0].message, "Network error");
+  assert.strictEqual(result[0].username, "networkError");
+
+  assert.strictEqual(result[1].data.username, "M-Abdoon");
+  assert.strictEqual(result[1].data.ranks.overall.name, "7 kyu");
+  assert.strictEqual(result[1].data.clan, "CodeYourFuture");
+
+  assert.strictEqual(result[2].notFound, true);
+  assert.strictEqual(result[2].username, "userDoesntExist");
 });
